@@ -1,0 +1,28 @@
+<div phx-window-keydown="on-skill-box" class="container mx-auto py-8 flex flex-col gap-4">
+  <div class="p-4 border">
+    {@name}
+  </div>
+  <div class="p-4 border flex flex-row justify-between">
+    <b>
+      {@challenge}
+    </b>
+    <b>
+      {@remaining_time}
+    </b>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div class="p-4 border flex flex-row gap-2">
+      <.render_skill_box key="Q" color="bg-blue-500" />
+      <.render_skill_box key="W" color="bg-purple-500" />
+      <.render_skill_box key="E" color="bg-red-500" />
+      <.render_skill_box key="R" color="bg-gray-900" />
+    </div>
+
+    <div class="p-4 border">
+      <%= for key <- @stash do %>
+        {key}
+      <% end %>
+    </div>
+  </div>
+</div>

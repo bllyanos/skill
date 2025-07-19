@@ -1,0 +1,95 @@
+<div phx-window-keydown="on-skill-box" class="container mx-auto my-8 flex flex-col gap-4">
+  {# info container}
+  <div class="flex flex-row justify-between items-center border rounded p-4">
+    <div class="text-2xl">
+      Match <b class="font-mono">{@match_id}</b>
+    </div>
+
+    <div class="p-4 rounded bg-base-300 text-base-content">
+      <b>{@player_name |> String.capitalize()}</b>
+      <small class="font-mono">{@session_code}</small>
+    </div>
+  </div>
+
+  {# main container}
+  <div class="grid grid-cols-4 gap-4">
+    {# player list}
+    <div class="rounded border p-4 flex flex-col gap-2">
+      <h1 class="text-center">Player List</h1>
+      <hr />
+
+      {# player info}
+      <div class="grid grid-cols-12">
+        <span class="col-span-8 px-2 bg-base-200">
+          Player 1
+        </span>
+        <span class="col-span-4 text-right font-mono font-bold px-2 bg-green-200">
+          0
+        </span>
+      </div>
+
+      {# player info}
+      <div class="grid grid-cols-12">
+        <span class="col-span-8 px-2 bg-base-200">
+          Player 2
+        </span>
+        <span class="col-span-4 text-right font-mono font-bold px-2 bg-base-300">
+          8
+        </span>
+      </div>
+
+      {# player info}
+      <div class="grid grid-cols-12">
+        <span class="col-span-8 px-2 bg-base-200">
+          Player 3
+        </span>
+        <span class="col-span-4 text-right font-mono font-bold px-2 bg-base-300">
+          18
+        </span>
+      </div>
+    </div>
+
+    {# game box}
+    <div class="col-span-3 rounded border p-4 flex flex-col gap-2">
+      {# game stats}
+      <div class="flex flex-col gap-2">
+        <progress class="my-2 progress progress-primary w-full" value="0" max="100"></progress>
+        <div class="flex flex-row">
+          <small>Remaining <b>20</b></small>
+        </div>
+      </div>
+
+      {# challenge and skillbox}
+      <div class="grid grid-cols-2 gap-4">
+        <div class="border border-primary rounded bg-base-200 p-4 flex flex-col gap-4">
+          {# skill stage}
+          <div class="flex flex-row gap-2 items-center justify-center font-mono">
+            <span class="px-6 aspect-square flex items-center">{"\["}</span>
+            <%= for staged <- @stage do %>
+              <.render_skill_stage key={staged |> String.upcase()} />
+            <% end %>
+            <span class="px-6 aspect-square flex items-center">{"\]"}</span>
+          </div>
+          <hr class="border-primary" />
+          <div class="flex flex-row gap-2 items-center justify-center font-mono">
+            <.render_skill_box key="Q" />
+            <.render_skill_box key="W" />
+            <.render_skill_box key="E" />
+            <.render_skill_box key="R" />
+          </div>
+          <hr class="border-primary" />
+          <div class="flex flex-row items-center justify-center font-mono text-xl font-bold">
+            <%= if @invoked_skill && @invoked_skill != :error do %>
+              {Invoker.info(@invoked_skill)}
+            <% else %>
+              <span class="text-base-content/40">[empty skill]</span>
+            <% end %>
+          </div>
+        </div>
+        <div class="border rounded p-4">
+          Challenge here
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
