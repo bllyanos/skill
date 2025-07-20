@@ -19,7 +19,8 @@ defmodule Skill.Application do
       # Start a worker by calling: Skill.Worker.start_link(arg)
       # {Skill.Worker, arg},
       # Start to serve requests, typically the last entry
-      SkillWeb.Endpoint
+      SkillWeb.Endpoint,
+      SkillWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

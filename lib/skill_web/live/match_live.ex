@@ -6,6 +6,17 @@ defmodule SkillWeb.MatchLive do
     session_code = create_session_code()
     player_id = Enum.join([player_name, session_code], ":")
 
+    socket =
+      if connected?(socket) do
+        SkillWeb.Presence.track_user(match_id, player_id, %{id: player_id, name: player_name})
+        SkillWeb.Presence.subscribe(match_id)
+        players = SkillWeb.Presence.list_online_users(match_id)
+        IO.inspect(players)
+        stream(socket, :players, players)
+      else
+        stream(socket, :players, [])
+      end
+
     {:ok,
      socket
      |> assign(:match_id, match_id)
@@ -90,5 +101,17 @@ defmodule SkillWeb.MatchLive do
       {@key}
     </div>
     """
+  end
+
+  def handle_info({SkillWeb.Presence, {:join, presence}}, socket) do
+    {:noreply, stream_insert(socket, :players, presence)}
+  end
+
+  def handle_info({SkillWeb.Presence, {:leave, presence}}, socket) do
+    if presence.metas == [] do
+      {:noreply, stream_delete(socket, :players, presence)}
+    else
+      {:noreply, stream_insert(socket, :players, presence)}
+    end
   end
 end
