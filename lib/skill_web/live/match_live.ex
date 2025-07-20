@@ -83,8 +83,16 @@ defmodule SkillWeb.MatchLive do
     <div
       phx-click="on-skill-box"
       phx-value-key={@key |> String.downcase()}
-      class={"px-6 aspect-square #{key_color(@key)} text-white font-bold flex items-center"}
+      class={"px-6 rounded aspect-square #{key_color(@key)} text-white font-bold flex items-center"}
     >
+      {@key}
+    </div>
+    """
+  end
+
+  defp render_skill_stage(assigns) do
+    ~H"""
+    <div class={"px-3 rounded aspect-square #{key_color(@key)} text-white text-sm font-bold flex items-center"}>
       {@key}
     </div>
     """
@@ -94,14 +102,6 @@ defmodule SkillWeb.MatchLive do
   defp key_color("W"), do: "bg-purple-700"
   defp key_color("E"), do: "bg-red-700"
   defp key_color("R"), do: "bg-gray-700"
-
-  defp render_skill_stage(assigns) do
-    ~H"""
-    <div class={"px-3 aspect-square #{key_color(@key)} text-white text-sm font-bold flex items-center"}>
-      {@key}
-    </div>
-    """
-  end
 
   def handle_info({SkillWeb.Presence, {:join, presence}}, socket) do
     {:noreply, stream_insert(socket, :players, presence)}
