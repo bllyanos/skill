@@ -1,0 +1,51 @@
+<Layouts.app flash={@flash}>
+  <div id="lobby-container" phx-hook="SetName" class="container mx-auto py-8 flex flex-col gap-4">
+    <div class="flex flex-col gap-2 p-4 bg-primary text-primary-content rounded">
+      <div>
+        Input your name
+      </div>
+      <.form for={@set_name_form} as={:set_name} phx-submit="set_name">
+        <div class="flex flex-row gap-2 text-base-content items-center">
+          <.input field={@set_name_form[:name]} type="text" />
+          <button class="btn btn-default" type="submit">Set Name</button>
+        </div>
+      </.form>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      {# create new room}
+      <div class="card bg-primary text-primary-content">
+        <div class="card-body">
+          <h2 class="card-title">Create a new room</h2>
+          <p>
+            Create a new room and invite your friends. You can just share the room url.
+          </p>
+          <div class="card-actions">
+            <button phx-click="create_room" class="btn w-full">Create Room</button>
+          </div>
+        </div>
+      </div>
+
+      {# join existing match room}
+      <div class="card bg-primary text-primary-content">
+        <div class="card-body">
+          <h2 class="card-title">Join Existing Room</h2>
+          <p>
+            Join an existing room and challenge your friends.
+          </p>
+
+          <.form
+            for={@join_room_form}
+            as={:join_room}
+            phx-submit="join_room"
+            phx-change="validate_join_room"
+          >
+            <.input field={@join_room_form[:room_id]} type="text" label="Room ID" />
+          </.form>
+          <div class="card-actions justify-end">
+            <button class="btn w-full">Join Room</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layouts.app>

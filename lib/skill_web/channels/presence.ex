@@ -20,8 +20,6 @@ defmodule SkillWeb.Presence do
   end
 
   def handle_metas(topic, %{joins: joins, leaves: leaves}, presences, state) do
-    IO.inspect(topic, label: "TOPIC")
-
     for {user_id, presence} <- joins do
       user_data = %{id: user_id, user: presence.user, metas: Map.fetch!(presences, user_id)}
       msg = {__MODULE__, {:join, user_data}}

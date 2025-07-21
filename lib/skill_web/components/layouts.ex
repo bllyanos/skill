@@ -44,7 +44,7 @@ defmodule SkillWeb.Layouts do
       <div class="flex-none">
         <ul class="flex flex-column px-1 gap-2 items-center">
           <li>
-            <button class="btn btn-ghost">Lobby</button>
+            <a href="/" class="btn btn-ghost">Lobby</a>
           </li>
           <li>
             <button class="btn btn-ghost">Play</button>

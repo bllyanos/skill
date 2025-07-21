@@ -8,6 +8,7 @@ defmodule SkillWeb.Router do
     plug :put_root_layout, html: {SkillWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :load_name
   end
 
   pipeline :api do
@@ -17,10 +18,12 @@ defmodule SkillWeb.Router do
   scope "/", SkillWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    post "/set_name", PageController, :set_name
 
-    live "/battle", BattleLive, :default
-    live "/match/:match_id", MatchLive, :default
+    live_session :default, on_mount: {SkillWeb.Hooks.SessionCodeGenerator, :default} do
+      live "/", LobbyLive, :default
+      live "/match/:match_id", MatchLive, :default
+    end
   end
 
   # Other scopes may use custom stacks.
@@ -42,6 +45,19 @@ defmodule SkillWeb.Router do
 
       live_dashboard "/dashboard", metrics: SkillWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  def load_name(conn, _opts) do
+    import Plug.Conn
+    conn = fetch_cookies(conn)
+    name = conn.cookies["name"]
+
+    if name do
+      conn
+      |> Plug.Conn.put_session(:name, name)
+    else
+      conn
     end
   end
 end

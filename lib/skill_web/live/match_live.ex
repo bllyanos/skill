@@ -1,17 +1,21 @@
 defmodule SkillWeb.MatchLive do
+  alias Skill.Notify
   alias Skill.Game.Invoker
   use SkillWeb, :live_view
 
-  def mount(%{"match_id" => match_id, "player_name" => player_name}, _session, socket) do
-    session_code = create_session_code()
-    player_id = Enum.join([player_name, session_code], ":")
+  def mount(%{"match_id" => match_id}, session, socket) do
+    session_code = socket.assigns.session_code
+    player_id = socket.assigns.player_id
+    player_name = session["name"]
 
     socket =
       if connected?(socket) do
+        # subscibe to the match topic
+        Notify.subscribe(match_id)
+
         SkillWeb.Presence.track_user(match_id, player_id, %{id: player_id, name: player_name})
         SkillWeb.Presence.subscribe(match_id)
         players = SkillWeb.Presence.list_online_users(match_id)
-        IO.inspect(players)
         stream(socket, :players, players)
       else
         stream(socket, :players, [])
@@ -20,6 +24,7 @@ defmodule SkillWeb.MatchLive do
     {:ok,
      socket
      |> assign(:match_id, match_id)
+     |> assign(:match_state, :waiting)
      |> assign(:player_name, player_name)
      |> assign(:player_id, player_id)
      |> assign(:session_code, session_code)
@@ -48,12 +53,10 @@ defmodule SkillWeb.MatchLive do
     {:noreply, socket}
   end
 
-  defp create_session_code() do
-    alias Ecto.UUID
+  def handle_event("start-match", params, socket) do
+    IO.inspect(params, label: "params")
 
-    UUID.bingenerate()
-    |> UUID.load!()
-    |> ShortUUID.encode!()
+    {:noreply, socket}
   end
 
   defp check_key(key) do

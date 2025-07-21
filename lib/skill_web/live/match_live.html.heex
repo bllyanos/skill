@@ -40,6 +40,13 @@
       <div class="col-span-3 rounded bg-base-200 text-base-content p-4 flex flex-col gap-2">
         {# game stats}
         <div class="flex flex-col gap-2">
+          <div class="flex flex-row justify-end">
+            <%= if @match_state == :waiting do %>
+              <button phx-click="start-match" class="btn btn-primary">Start Match</button>
+            <% else %>
+              <button disabled class="btn btn-disabled">Match Started</button>
+            <% end %>
+          </div>
           <progress class="my-2 progress progress-primary w-full" value="0" max="100"></progress>
           <div class="flex flex-row">
             {# replace the hardcoded 20 value with the actual remaining challenge count}

@@ -25,11 +25,30 @@ import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/skill"
 import topbar from "../vendor/topbar"
 
+let Hooks = {}
+
+Hooks.SetName = {
+  mounted() {
+    this.handleEvent("set_name", e => {
+      const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+      fetch("/set_name", {
+        method: "POST",
+        headers: {"Content-Type": "application/json", "x-csrf-token": csrfToken},
+        body: JSON.stringify({name: e.name})
+      })
+      .then(response => response.json())
+      .then(resp => {
+          console.log(resp)
+        })
+    })
+  }
+}
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks},
+  hooks: {...colocatedHooks, ...Hooks},
   metadata: {
     keydown: (e, el) => {
       return {

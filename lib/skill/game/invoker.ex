@@ -29,13 +29,10 @@ defmodule Skill.Game.Invoker do
   def invoke(10), do: :sun_strike
 
   def invoke(combination) when is_list(combination) and length(combination) == 3 do
-    IO.puts("masuk sini")
-
     combination
     |> Enum.sort()
     # reverse to make it natural
     |> Enum.reverse()
-    |> IO.inspect(label: "before_invoke")
     |> cast()
     |> invoke()
   end
